@@ -12,11 +12,8 @@ logger.setLevel(logging.INFO)
 from application_services.imdb_artists_resource import IMDBArtistResource
 from application_services.UsersResource.user_service import UserResource
 
-
 app = Flask(__name__)
 CORS(app)
-
-
 
 
 @app.route('/')
@@ -38,9 +35,16 @@ def get_users():
     return rsp
 
 
+@app.route('/users/<user_no>')
+def get_users_by_user_no(user_no):
+    res = UserResource.get_by_template({"user_no": user_no})
+    rsp = Response(json.dumps(res, default=str), status=200, content_type="application/json")
+    return rsp
+
+
 @app.route('/<db_schema>/<table_name>/<column_name>/<prefix>')
 def get_by_prefix(db_schema, table_name, column_name, prefix):
-    res = d_service.get_by_prefix(db_schema, table_name, column_name, prefix)
+    res = d_service.RDBService.get_by_prefix(db_schema, table_name, column_name, prefix)
     rsp = Response(json.dumps(res, default=str), status=200, content_type="application/json")
     return rsp
 
